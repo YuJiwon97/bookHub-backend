@@ -3,12 +3,10 @@ package com.example.bookhubbackend.controller;
 import com.example.bookhubbackend.model.Book;
 import com.example.bookhubbackend.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books")
@@ -23,5 +21,11 @@ public class BookController {
             @RequestParam String categoryType,
             @RequestParam String category) {
         return bookService.findBooksByCategoryTypeAndCategory(categoryType, category);
+    }
+
+    // 책 상세 조회
+    @GetMapping("/{id}")
+    public Optional<Book> getBookById(@PathVariable Long id) {
+        return bookService.findBookById(id);
     }
 }
