@@ -72,4 +72,10 @@ public class UserController {
         String token = JwtTokenUtil.generateToken(foundUser.getUserId());
         return ResponseEntity.ok(new LoginResponse(token));
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable String userId) {
+        Optional<User> user = userService.findByUserId(userId);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

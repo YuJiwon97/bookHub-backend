@@ -45,4 +45,13 @@ public class CartService {
             cartRepository.save(cart);
         }
     }
+
+    // 장바구니 비우기 메서드 추가
+    public void clearCartByUserId(String userId) {
+        List<Cart> cartItems = cartRepository.findByUserIdAndIsDeletedFalse(userId);
+        for (Cart cart : cartItems) {
+            cart.setIsDeleted(true);
+        }
+        cartRepository.saveAll(cartItems);
+    }
 }
