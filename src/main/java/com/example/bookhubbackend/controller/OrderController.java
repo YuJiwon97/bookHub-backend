@@ -42,6 +42,6 @@ public class OrderController {
         orderService.createOrder(order);
         userService.applyMileage(orderRequest.getUserId(), orderRequest.getUseMileage(), orderRequest.getEarnMileage());
 
-        return ResponseEntity.ok("Order completed");
+        return ResponseEntity.ok("주문이 완료되었습니다.");
     }
 }
