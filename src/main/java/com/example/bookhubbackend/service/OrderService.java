@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class OrderService {
 
@@ -33,5 +38,25 @@ public class OrderService {
         userService.updateUserMileage(order.getUserId(), newMileage);
         newMileage += order.getEarnMileage();
         userService.updateUserMileage(order.getUserId(), newMileage);
+    }
+
+    public Map<String, Integer> getOrderStatusCounts(String userId) {
+        Map<String, Integer> statusCounts = new HashMap<>();
+        String[] statuses = { "입금대기", "결제완료", "상품준비중", "배송중", "배송완료", "구매확정" };
+        for (String status : statuses) {
+            statusCounts.put(status, 0);
+        }
+
+        orderRepository.findByUserId(userId).forEach(order -> {
+            String status = order.getStatus();
+            if (statusCounts.containsKey(status)) {
+              statusCounts.put(status, statusCounts.get(status) + 1);
+            }
+        });
+        return statusCounts;
+    }
+
+    public List<Order> findOrdersByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate) {
+        return orderRepository.findByUserIdAndOrderDateBetween(userId, startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
     }
 }

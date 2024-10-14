@@ -26,9 +26,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<Book> findById(Long id) {
-        // Alternative logic for finding a book by ID
-        // This could be different from findBookById based on requirements
-        return bookRepository.findById(id); // Or different implementation if needed
+        return bookRepository.findById(id);
     }
 
+    @Override
+    public String findBookTitleById(Long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+
+        if (optionalBook.isPresent()) {
+            String title = optionalBook.get().getTitle();
+            System.out.println("책 ID: " + id + " | 책 제목: " + title);
+            return title;
+        } else {
+            System.out.println("책 ID: " + id + " | 책을 찾을 수 없습니다.");
+            return "책 제목이 없습니다.";
+        }
+    }
 }
