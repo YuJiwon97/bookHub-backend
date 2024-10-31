@@ -7,6 +7,7 @@ import com.example.bookhubbackend.service.BookService;
 import com.example.bookhubbackend.service.OrderService;
 import com.example.bookhubbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,5 +76,40 @@ public class OrderController {
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(orderResponses);
+    }
+
+    @GetMapping("/management")
+    public ResponseEntity<List<OrderManagementResponse>> getOrderManagement() {
+        List<Order> orders = orderService.getAllOrders();
+
+        List<OrderManagementResponse> orderManagements = orders.stream().flatMap(order ->
+                order.getItems().stream().map(item ->
+                        new OrderManagementResponse(
+                                order.getOrderDate(),
+                                order.getId(),
+                                order.getUserId(),
+                                bookService.findBookTitleById(item.getBookId()),
+                                item.getPrice(),
+                                item.getQuantity(),
+                                order.getStatus()
+                        )
+                )
+        ).collect(Collectors.toList());
+
+        return ResponseEntity.ok(orderManagements);
+    }
+
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<String> updateOrderStatus(@PathVariable Long orderId, @RequestBody Map<String, String> statusUpDate) {
+        try {
+            String newStatus = statusUpDate.get("status");
+            if (newStatus == null) {
+                return ResponseEntity.badRequest().body("상태 값이 필요합니다.");
+            }
+            orderService.updateOrderStatus(orderId, newStatus);
+            return ResponseEntity.ok("주문 상태가 성공적으로 업데이트 되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주문 상태 업테이드에 실패했습니다.");
+        }
     }
 }

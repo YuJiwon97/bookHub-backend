@@ -46,14 +46,13 @@ public class Order {
     private String status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items;  // 주문 아이템 리스트
+    private List<OrderItem> items;
 
     // 기본 생성자
     public Order() {
         this.status = "결제완료";
     }
 
-    // 주문 요청을 Order 객체로 변환하는 메서드
     public void updateFromOrderRequest(OrderRequest orderRequest) {
         this.userId = orderRequest.getUserId();
         this.receiverName = orderRequest.getReceiverName();
@@ -68,7 +67,6 @@ public class Order {
         this.useMileage = orderRequest.getUseMileage();
         this.earnMileage = orderRequest.getEarnMileage();
 
-        // 주문 날짜 처리
         if (orderRequest.getOrderDate() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
             this.orderDate = LocalDateTime.parse(orderRequest.getOrderDate(), formatter);

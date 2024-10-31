@@ -14,7 +14,7 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // 주문 아이템의 고유 식별자 (Primary Key)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
