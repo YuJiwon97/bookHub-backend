@@ -112,4 +112,9 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주문 상태 업테이드에 실패했습니다.");
         }
     }
+
+    @GetMapping("/popular")
+    public Map<String, List<PopularProductDto>> getPopularProducts() {
+        return orderService.getPopularProductsByCategory();
+    }
 }
