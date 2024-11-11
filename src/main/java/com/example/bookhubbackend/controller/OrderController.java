@@ -117,4 +117,16 @@ public class OrderController {
     public Map<String, List<PopularProductDto>> getPopularProducts() {
         return orderService.getPopularProductsByCategory();
     }
+
+    @GetMapping("/sales-stats")
+    public ResponseEntity<List<SalesStatsDto>> getSalesStats(@RequestParam("period") String period) {
+        List<SalesStatsDto> stats = orderService.getSalesStats(period);
+        return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/category-sales-stats")
+    public ResponseEntity<List<CategorySalesStatsDto>> getCategorySalesStats(@RequestParam("period") String period) {
+        List<CategorySalesStatsDto> stats = orderService.getCategorySalesStats(period);
+        return ResponseEntity.ok(stats);
+    }
 }
