@@ -40,6 +40,7 @@ public class OrderController {
                     OrderItem orderItem = new OrderItem();
                     orderItem.setBookId(item.getBookId());
                     orderItem.setPrice(item.getPrice());
+                    orderItem.setQuantity(item.getQuantity());
                     orderItem.setTotalPrice(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
                     orderItem.setOrder(order);
                     return orderItem;
