@@ -1,8 +1,6 @@
 package com.example.bookhubbackend.service;
 
-import com.example.bookhubbackend.dto.CategorySalesStatsDto;
-import com.example.bookhubbackend.dto.PopularProductDto;
-import com.example.bookhubbackend.dto.SalesStatsDto;
+import com.example.bookhubbackend.dto.*;
 import com.example.bookhubbackend.model.Book;
 import com.example.bookhubbackend.model.Order;
 
@@ -17,10 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +29,10 @@ public class OrderService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BookService bookService;
+
     @Autowired
     private BookRepository bookRepository;
 
@@ -203,4 +202,35 @@ public class OrderService {
         };
         return dateTime.format(formatter);
     }
+
+    public List<OrderResponse> getOrderHistoryByUserId(String userId) {
+        // 사용자 ID로 주문 내역 조회
+        List<Order> orders = orderRepository.findByUserId(userId);
+
+        // 주문 내역을 OrderResponse로 변환
+        return orders.stream().map(order -> {
+            List<OrderItemResponse> itemResponses = order.getItems().stream().map(orderItem -> {
+                String title = bookService.findBookTitleById(orderItem.getBookId());
+                return new OrderItemResponse(
+                        orderItem.getId(),
+                        orderItem.getBookId(),
+                        title,
+                        orderItem.getQuantity(),
+                        orderItem.getPrice(),
+                        orderItem.getTotalPrice()
+                );
+            }).collect(Collectors.toList());
+            return new OrderResponse(
+                    order.getId(),
+                    order.getOrderDate(),
+                    order.getId(),  // 주문 번호
+                    itemResponses,
+                    order.getStatus()
+            );
+        }).collect(Collectors.toList());
+    }
+
+
+
+
 }

@@ -25,6 +25,10 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public long getCartItemCountByUser(User user) {
+        return cartRepository.countByUserIdAndIsDeletedFalse(user.getUserId()); // userId를 String으로
+    }
+
     public List<Cart> getCartItemsByUser(User user) {
         return cartRepository.findByUserIdAndIsDeletedFalse(user.getUserId()); // userId를 String으로
     }

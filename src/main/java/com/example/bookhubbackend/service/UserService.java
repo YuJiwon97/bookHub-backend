@@ -1,6 +1,8 @@
 package com.example.bookhubbackend.service;
 
 import com.example.bookhubbackend.model.User;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -19,4 +21,10 @@ public interface UserService {
 
     // 마일리지 업데이트 메서드
     void updateUserMileage(String userId, int mileageChange);
+
+    // 모든 사용자 조회
+    List<User> findAllUsers();
+
+    // 사용자 조회
+    Optional<User> findById(Long id);
 }

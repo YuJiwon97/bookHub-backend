@@ -19,8 +19,13 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+
     private Long bookId;
     private int quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;
+
+    @Setter
+    private String status;
+
 }

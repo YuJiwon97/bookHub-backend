@@ -129,4 +129,9 @@ public class OrderController {
         List<CategorySalesStatsDto> stats = orderService.getCategorySalesStats(period);
         return ResponseEntity.ok(stats);
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponse>> getOrderHistory(@PathVariable String userId) {
+        List<OrderResponse> orderResponses = orderService.getOrderHistoryByUserId(userId);
+        return ResponseEntity.ok(orderResponses);
+    }
 }

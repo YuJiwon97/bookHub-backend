@@ -49,7 +49,6 @@ public class CartController {
                 return new ResponseEntity<>("사용자 또는 책을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
             }
 
-            // CartService를 이용해 장바구니에 책 추가.
             cartService.addToCart(userOptional.get(), bookOptional.get(), cartRequest.getQuantity());
 
             // 성공적으로 장바구니에 추가되었을 때 200 응답 반환.
@@ -85,6 +84,25 @@ public class CartController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/count/{userId}")
+    public ResponseEntity<Integer> getCartItemCountByUser(@PathVariable("userId") String userId) {
+        logger.info("받은 userId: {}", userId);
+        try {
+            Optional<User> userOptional = userService.findByUserId(userId);
+            if (userOptional.isEmpty()) {
+                logger.warn("아이디 {} 를 가진 사용자를 찾을 수 없습니다.", userId);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            int itemCount = (int) cartService.getCartItemCountByUser(userOptional.get());
+            return new ResponseEntity<>(itemCount, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("사용자 아이디 {}에 대한 장바구니 항목 수를 가져오는 중에 오류가 발생했습니다.", userId, e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<String> updateCartItemQuantity(@PathVariable("id") Long id, @RequestBody CartRequest cartRequest) {

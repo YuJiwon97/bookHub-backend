@@ -15,7 +15,7 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
-    public List<Book> findBooksByCategoryTypeAndCategory(String categoryType, String category) {
+    public List<Book> getBooksByCategory(String categoryType, String category) {
         return bookRepository.findByCategoryTypeAndCategory(categoryType, category);
     }
 
@@ -41,5 +41,20 @@ public class BookServiceImpl implements BookService {
             System.out.println("책 ID: " + id + " | 책을 찾을 수 없습니다.");
             return "책 제목이 없습니다.";
         }
+    }
+
+    @Override
+    public List<Book> findAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    @Override
+    public Book saveBook(Book book) {
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 }
